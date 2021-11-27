@@ -1,89 +1,161 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Headline, Button, Dialog, Paragraph, Portal } from 'react-native-paper';
-import globalStyles from "../styles/global";
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Platform} from 'react-native';
+import {
+  TextInput,
+  Headline,
+  Button,
+  Paragraph,
+  Dialog,
+  Portal,
+} from 'react-native-paper';
 
-const NuevoCliente = () => {
+import globalStyles from '../styles/global';
+import axios from 'axios';
 
-    //Campos formulario
-    const [nombre, guardarNombre] = useState('');
-    const [telefono, guardarTelefono] = useState('');
-    const [correo, guardarCorreo] = useState('');
-    const [empresa, guardarEmpresa] = useState('');
-    const [alerta, guardarAlerta] = useState(false);
+const NuevoCliente = ({navigation, route}) => {
+  let titulo;
+  const {guardarConsultarAPI} = route.params;
 
-    //Almacenar cliente
-    const guardarCliente = () => {
-        //Validar cliente
-        if (nombre.trim() === '' || telefono.trim() === '' || correo.trim() === '' || empresa.trim() === '') {
-            guardarAlerta(true);
-            return;
-        }
+  if (guardarConsultarAPI == null) {
+    navigation.navigate('NuevoCliente');
+  }
 
-        //Generar el cliente
-        const cliente = { nombre, telefono, correo, empresa }
+  // campos del formulario
+  const [nombre, guardarNombre] = useState('');
+  const [telefono, guardarTelefono] = useState('');
+  const [correo, guardarCorreo] = useState('');
+  const [empresa, guardarEmpresa] = useState('');
+  const [alerta, guardarAlerta] = useState(false);
+
+  useEffect(() => {
+    if (route.params.cliente) {
+      const {nombre, telefono, correo, empresa} = route.params.cliente;
+      guardarNombre(nombre);
+      guardarTelefono(telefono);
+      guardarCorreo(correo);
+      guardarEmpresa(empresa);
+    }
+  }, []);
+  const guardarCliente = async () => {
+    // validar
+    console.log(nombre, telefono, correo, empresa);
+    if (nombre === '' || telefono === '' || correo === '' || empresa === '') {
+      guardarAlerta(true);
+      return;
     }
 
-    return (
-        <View style={globalStyles.contenedor}>
-            <Headline style={globalStyles.titulo}>Agregar Nuevo Cliente</Headline>
+    // generar el cliente
+    const cliente = {nombre, telefono, correo, empresa};
 
-            <TextInput
-                label="Nombre"
-                placeholder="Ej. John Doe"
-                onChangeText={(texto) => guardarNombre(texto)}
-                value={nombre}
-                style={styles.input}
-            />
+    if (route.params.cliente) {
+      titulo = 'Actualizar Cliente';
+      const {id} = route.params.cliente;
+      cliente.id = id;
+      const url = `https://61a184186c3b400017e69d11.mockapi.io/clientes/${id}`;
 
-            <TextInput
-                label="Teléfono"
-                placeholder="Ej. 8095559595"
-                onChangeText={(texto) => guardarTelefono(texto)}
-                value={telefono}
-                style={styles.input}
-            />
+      try {
+        await axios.put(url, cliente);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      // guardar
+      titulo = 'Añadir Nuevo Cliente'
+      try {
+        if (Platform.OS === 'ios') {
+          await axios.post('https://61a184186c3b400017e69d11.mockapi.io/clientes', cliente);
+        } else {
+          await axios.post('https://61a184186c3b400017e69d11.mockapi.io/clientes', cliente);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
-            <TextInput
-                label="Correo"
-                placeholder="Ej.correo@correo.com"
-                onChangeText={(texto) => guardarCorreo(texto)}
-                value={correo}
-                style={styles.input}
-            />
+    // redireccionar
+    navigation.navigate('Inicio');
+    // limpiar formulario (opcional)
+    guardarNombre('');
+    guardarTelefono('');
+    guardarCorreo('');
+    guardarEmpresa('');
 
-            <TextInput
-                label="Empresa"
-                placeholder="Ej. Empresa X"
-                onChangeText={(texto) => guardarEmpresa(texto)}
-                value={empresa}
-                style={styles.input}
-            />
+    // Cambiar a true para traernos el nuevo cliente
+    guardarConsultarAPI(true);
+  };
 
-            <Button mode='contained' onPress={() => guardarCliente()}>
-                Guardar Cliente
+  return (
+    <View style={globalStyles.contenedor}>
+      <Headline style={globalStyles.titulo}>Añadir Nuevo Cliente</Headline>
+
+      <TextInput
+        label="Nombre"
+        placeholder="Escribe tu Nombre"
+        onChangeText={texto => guardarNombre(texto)}
+        value={nombre}
+        style={styles.input}
+      />
+
+      <TextInput
+        label="Telefono"
+        placeholder="9999999999"
+        onChangeText={texto => guardarTelefono(texto)}
+        value={telefono}
+        style={styles.input}
+      />
+
+      <TextInput
+        label="Correo"
+        placeholder="correo@correo.com"
+        onChangeText={texto => guardarCorreo(texto)}
+        value={correo}
+        style={styles.input}
+      />
+
+      <TextInput
+        label="Empresa"
+        placeholder="Escribe el Nombre de tu Empresa"
+        onChangeText={texto => guardarEmpresa(texto)}
+        value={empresa}
+        style={styles.input}
+      />
+
+      <Button
+        style={styles.boton}
+        icon="content-save"
+        mode="contained"
+        onPress={() => guardarCliente()}>
+        Guardar Cliente
+      </Button>
+
+      <Portal>
+        <Dialog visible={alerta} onDismiss={() => guardarAlerta(false)}>
+          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Todos los campos son Obligatorios</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                guardarAlerta(false);
+              }}>
+              Ok
             </Button>
-
-            <Portal>
-                <Dialog visible={alerta} onDismiss={() => guardarAlerta(false)}>
-                    <Dialog.Title>Error</Dialog.Title>
-                    <Dialog.Content>
-                        <Paragraph>Todos los campos son obligatorios.</Paragraph>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={() => guardarAlerta(false)}>Ok</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-        </View>
-    );
-}
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    input: {
-        marginBottom: 20,
-        backgroundColor: 'transparent'
-    }
-})
+  input: {
+    marginBottom: 20,
+    backgroundColor: 'transparent',
+  },
+  boton: {
+      backgroundColor: '#2a9d8f'
+  }
+});
 
 export default NuevoCliente;

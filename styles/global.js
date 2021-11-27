@@ -1,4 +1,4 @@
-import { StyleSheet } from  'react-native';
+import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
     contenedor: {
@@ -11,7 +11,14 @@ const globalStyles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 30,
         fontSize: 30
-    }
+    },
+    fab: {
+        position: 'absolute',
+        margin: 20,
+        right: 0,
+        bottom: 20,
+        backgroundColor: '#ee9b00'
+    },
 });
 
 export default globalStyles;

@@ -6,7 +6,6 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import Inicio from './views/Inicio';
 import NuevoCliente from './views/NuevoCliente';
 import DetallesCliente from './views/DetallesCliente';
-import BarraSuperior from './components/Barra';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,12 +38,10 @@ const App = () => {
               }
             }}  >
 
-            <Stack.Screen name="Inicio" component={Inicio} options={({ navigation, route }) => ({
-              headerLeft: (props) => <BarraSuperior {...props}
-                navigation={navigation}
-                route={route}
-              />
-            })} />
+            <Stack.Screen
+              name="Inicio"
+              component={Inicio}
+            />
 
             <Stack.Screen name="NuevoCliente" component={NuevoCliente} options={{ title: 'Nuevo Cliente' }} />
 
