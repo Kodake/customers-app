@@ -1,4 +1,4 @@
-package com.frontend;
+package com.customers;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

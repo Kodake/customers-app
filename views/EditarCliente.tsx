@@ -9,6 +9,7 @@ import { Props } from '../interfaces/appInterfaces';
 import { CLIENT_STRINGS } from '../messages/appMessages';
 
 const EditarCliente: React.FC<Props> = observer(({ navigation }) => {
+  
   useEffect(() => {
     if (store.clienteById) {
       store.setNombre(store.clienteById.nombre || '');
