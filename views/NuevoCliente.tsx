@@ -8,16 +8,12 @@ import {
   Dialog,
   Portal,
 } from 'react-native-paper';
-
 import globalStyles from '../styles/global';
 import { styles } from './NuevoClienteStyles';
 import store from '../store/sharedStateStore';
 import { observer } from 'mobx-react';
-
-interface Props {
-  navigation: any;
-  route: any;
-}
+import { Props } from '../interfaces/appInterfaces';
+import { CLIENT_STRINGS } from '../messages/appMessages';
 
 const NuevoCliente: React.FC<Props> = observer(({ navigation }) => {
 
@@ -31,32 +27,32 @@ const NuevoCliente: React.FC<Props> = observer(({ navigation }) => {
 
   return (
     <View style={globalStyles.contenedor}>
-      <Headline style={globalStyles.titulo}>Añadir Nuevo Cliente</Headline>
+      <Headline style={globalStyles.titulo}>Agregar Cliente</Headline>
 
       <TextInput
-        label="Nombre"
-        placeholder="Escribe tu Nombre"
+        label={CLIENT_STRINGS.nameLabel}
+        placeholder={CLIENT_STRINGS.namePlaceholder}
         onChangeText={(texto) => store.setNombre(texto)}
         style={styles.input}
       />
 
       <TextInput
-        label="Telefono"
-        placeholder="9999999999"
+        label={CLIENT_STRINGS.phoneLabel}
+        placeholder={CLIENT_STRINGS.phonePlaceholder}
         onChangeText={(texto) => store.setTelefono(texto)}
         style={styles.input}
       />
 
       <TextInput
-        label="Correo"
-        placeholder="correo@correo.com"
+        label={CLIENT_STRINGS.emailLabel}
+        placeholder={CLIENT_STRINGS.emailPlaceholder}
         onChangeText={(texto) => store.setCorreo(texto)}
         style={styles.input}
       />
 
       <TextInput
-        label="Empresa"
-        placeholder="Escribe el Nombre de tu Empresa"
+        label={CLIENT_STRINGS.companyLabel}
+        placeholder={CLIENT_STRINGS.companyPlaceholder}
         onChangeText={(texto) => store.setEmpresa(texto)}
         style={styles.input}
       />
@@ -67,17 +63,17 @@ const NuevoCliente: React.FC<Props> = observer(({ navigation }) => {
         mode="contained"
         onPress={handleSaveCliente}
       >
-        Guardar Cliente
+        {CLIENT_STRINGS.saveButton}
       </Button>
 
       <Portal>
         <Dialog visible={store.alerta} onDismiss={() => store.setAlerta(false)}>
-          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Title>{CLIENT_STRINGS.errorDialogTitle}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>Todos los campos son obligatorios</Paragraph>
+            <Paragraph>{CLIENT_STRINGS.errorDialogMessage}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => store.setAlerta(false)}>Ok</Button>
+            <Button onPress={() => store.setAlerta(false)}>{CLIENT_STRINGS.errorDialogButton}</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

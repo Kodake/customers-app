@@ -1,19 +1,6 @@
 import axios from "axios";
 import { makeAutoObservable, runInAction } from "mobx";
-
-interface Cliente {
-    id: number;
-    nombre: string;
-    telefono: string;
-    empresa: string;
-}
-
-interface NewCliente {
-    nombre: string;
-    telefono: string;
-    correo: string;
-    empresa: string;
-}
+import { Cliente, NewCliente } from "../interfaces/appInterfaces";
 
 class SharedStateStore {
     nombre = '';
@@ -22,6 +9,7 @@ class SharedStateStore {
     empresa = '';
     alerta = false;
     cliente: NewCliente | undefined;
+    clienteById: Cliente | undefined;
     clientes: Cliente[] = [];
     consultarAPI: boolean = false;
     isSaved: boolean = false;
@@ -65,6 +53,10 @@ class SharedStateStore {
         this.cliente = cliente
     }
 
+    setClienteById(cliente: Cliente): void {
+        this.clienteById = cliente
+    }
+
     setClientes(clientes: Cliente[]): void {
         this.clientes = clientes
     }
@@ -86,8 +78,22 @@ class SharedStateStore {
         });
     }
 
+    async fetchClienteById(id: string): Promise<void> {
+        const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes/${id}`;
+
+        try {
+            const response = await axios.get(url);
+            const cliente = response.data;
+            runInAction(() => {
+                this.setClienteById(cliente);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async saveCliente(): Promise<void> {
-        if (this.nombre === '' && this.telefono === '' && this.correo === '' && this.empresa === '') {
+        if (this.nombre === '' || this.telefono === '' || this.correo === '' || this.empresa === '') {
             this.setAlerta(true);
             this.setIsSaved(false);
             return;
@@ -95,7 +101,7 @@ class SharedStateStore {
 
         const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes`;
 
-        const newCliente = { nombre: this.nombre, telefono: this.telefono, empresa: this.empresa };
+        const newCliente = { nombre: this.nombre, telefono: this.telefono, correo: this.correo, empresa: this.empresa };
 
         try {
             await axios.post(url, newCliente);
@@ -105,6 +111,46 @@ class SharedStateStore {
             });
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async updateCliente(id?: string): Promise<void> {
+        if (this.nombre === '' || this.telefono === '' || this.correo === '' || this.empresa === '') {
+            this.setAlerta(true);
+            this.setIsSaved(false);
+            return;
+        }
+
+        const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes/${id}`;
+
+        const updatedCliente = {
+            nombre: this.nombre,
+            telefono: this.telefono,
+            correo: this.correo,
+            empresa: this.empresa
+        };
+
+        try {
+            await axios.put(url, updatedCliente);
+            runInAction(() => {
+                this.setIsSaved(true);
+                this.fetchClientes();
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteClienteById(id: string): Promise<void> {
+        const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes/${id}`;
+
+        try {
+            await axios.delete(url);
+            runInAction(() => {
+                this.fetchClientes();
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 }

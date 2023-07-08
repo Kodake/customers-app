@@ -1,70 +1,64 @@
 import React from 'react';
 import { View, Alert } from 'react-native';
 import { Headline, Text, Subheading, Button, FAB } from 'react-native-paper';
-import axios from 'axios';
 import globalStyles from '../styles/global';
 import { styles } from './DetallesClienteStyles';
+import store from '../store/sharedStateStore';
+import { Props } from '../interfaces/appInterfaces';
+import { CLIENT_STRINGS, CONFIRMATION_MESSAGES } from '../messages/appMessages';
 
-interface Props {
-  navigation: any;
-  route: any;
-}
+const DetallesCliente: React.FC<Props> = ({ navigation }) => {
 
-const DetallesCliente: React.FC<Props> = ({ navigation, route }) => {
-  console.log(route.params);
-
-  const { nombre, telefono, correo, empresa, id } = route.params.item;
-
-  const mostrarConfirmacion = () => {
+  const handleConfirmation = () => {
     Alert.alert(
-      '¿Deseas Eliminar este Cliente?',
-      'Un Mensaje eliminado no se puede recuperar',
+      CONFIRMATION_MESSAGES.deleteConfirmation,
+      CONFIRMATION_MESSAGES.deleteConfirmationDescription,
       [
-        { text: 'Si, Eliminar', onPress: () => eliminarContacto() },
-        { text: 'Cancelar', style: 'cancel' },
+        { text: CONFIRMATION_MESSAGES.deleteConfirmationYes, onPress: () => handleDeleteCliente(store.clienteById?.id.toString()) },
+        { text: CONFIRMATION_MESSAGES.deleteConfirmationCancel, style: 'cancel' },
       ],
     );
   };
 
-  const eliminarContacto = async () => {
-    try {
-      const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes/${id}`;
-      await axios.delete(url);
-    } catch (error) {
-      console.log(error);
+  const handleDeleteCliente = async (id?: string) => {
+    if (id) {
+      await store.deleteClienteById(id);
+      navigation.navigate('Inicio');
     }
+  };
 
-    // Redireccionar
-    navigation.navigate('Inicio');
-
-    // Volver a consultar la API
+  const handleFetchCliente = async (id?: string) => {
+    if (id) {
+      await store.fetchClienteById(id);
+      navigation.navigate('EditarCliente');
+    }
   };
 
   return (
     <View style={globalStyles.contenedor}>
-      <Headline style={globalStyles.titulo}>{nombre}</Headline>
+      <Headline style={globalStyles.titulo}>{store.clienteById?.nombre}</Headline>
       <Text style={styles.texto}>
-        Empresa: <Subheading>{empresa}</Subheading>
+        {CLIENT_STRINGS.companyLabel}: <Subheading>{store.clienteById?.empresa}</Subheading>
       </Text>
       <Text style={styles.texto}>
-        Correo: <Subheading>{correo}</Subheading>
+        {CLIENT_STRINGS.emailLabel}: <Subheading>{store.clienteById?.correo}</Subheading>
       </Text>
       <Text style={styles.texto}>
-        Telefono: <Subheading>{telefono}</Subheading>
+        {CLIENT_STRINGS.phoneLabel}: <Subheading>{store.clienteById?.telefono}</Subheading>
       </Text>
 
       <Button
         icon="close"
         mode="contained"
         style={styles.boton}
-        onPress={() => mostrarConfirmacion()}>
-        Eliminar Cliente
+        onPress={handleConfirmation}>
+        {CLIENT_STRINGS.deleteClient}
       </Button>
 
       <FAB
         icon="pencil"
         style={globalStyles.fab}
-        onPress={() => { }}
+        onPress={() => handleFetchCliente(store.clienteById?.id.toString())}
       />
     </View>
   );

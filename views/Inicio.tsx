@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, View } from 'react-native';
 import { List, Headline, Button, FAB } from 'react-native-paper';
 import globalStyles from '../styles/global';
 import { styles } from './InicioStyles';
 import { observer } from 'mobx-react';
 import store from '../store/sharedStateStore';
+import { Props } from '../interfaces/appInterfaces';
+import { CLIENT_STRINGS } from '../messages/appMessages';
 
 interface Cliente {
   id: number;
   nombre: string;
   empresa: string;
-}
-
-interface Props {
-  navigation: any;
 }
 
 const Inicio: React.FC<Props> = observer(({ navigation }) => {
@@ -22,19 +20,31 @@ const Inicio: React.FC<Props> = observer(({ navigation }) => {
     store.fetchClientes();
   }, []);
 
+  const handleFetchCliente = async (id: string) => {
+    if (id) {
+      await store.fetchClienteById(id);
+      store.clearCliente();
+      navigation.navigate('DetallesCliente');
+    }
+  };
+
+  const handleNavigateNewCliente = () => {
+    navigation.navigate('NuevoCliente');
+  }
+
   return (
     <View style={globalStyles.contenedor}>
       <Button
         style={styles.boton}
         icon="plus"
         mode="contained"
-        onPress={() => navigation.navigate('NuevoCliente')}
+        onPress={handleNavigateNewCliente}
       >
-        Nuevo Cliente
+        {CLIENT_STRINGS.newClient}
       </Button>
 
       <Headline style={globalStyles.titulo}>
-        {store.clientes.length > 0 ? 'Clientes' : 'Aún no hay clientes'}
+        {store.clientes.length > 0 ? CLIENT_STRINGS.clients : CLIENT_STRINGS.noClientsYet}
       </Headline>
 
       <FlatList
@@ -44,7 +54,7 @@ const Inicio: React.FC<Props> = observer(({ navigation }) => {
           <List.Item
             title={item.nombre}
             description={item.empresa}
-            onPress={() => {}}
+            onPress={() => handleFetchCliente(item.id.toString())}
           />
         )}
       />
@@ -52,7 +62,7 @@ const Inicio: React.FC<Props> = observer(({ navigation }) => {
       <FAB
         icon="plus"
         style={styles.fab}
-        onPress={() => {}}
+        onPress={handleNavigateNewCliente}
       />
     </View>
   );
