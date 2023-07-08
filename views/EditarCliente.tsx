@@ -6,7 +6,7 @@ import { styles } from './NuevoClienteStyles';
 import store from '../store/sharedStateStore';
 import { observer } from 'mobx-react';
 import { Props } from '../interfaces/appInterfaces';
-import { CLIENT_STRINGS } from '../messages/appMessages';
+import { CLIENT_STRINGS, ERROR_MESSAGES } from '../messages/appMessages';
 
 const EditarCliente: React.FC<Props> = observer(({ navigation }) => {
   
@@ -81,7 +81,7 @@ const EditarCliente: React.FC<Props> = observer(({ navigation }) => {
         <Dialog visible={store.alerta} onDismiss={() => store.setAlerta(false)}>
           <Dialog.Title>{CLIENT_STRINGS.errorDialogTitle}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{CLIENT_STRINGS.errorDialogMessage}</Paragraph>
+            <Paragraph>{ERROR_MESSAGES.requiredFields}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => store.setAlerta(false)}>{CLIENT_STRINGS.errorDialogButton}</Button>
