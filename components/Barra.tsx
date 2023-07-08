@@ -7,7 +7,7 @@ interface Props {
   route: RouteProp<any>;
 }
 
-const BarraSuperior: React.FC<Props> = ({ navigation, route }) => {
+const BarraSuperior: React.FC<Props> = ({ navigation }) => {
   const handlePress = () => {
     navigation.navigate('NuevoCliente');
   };

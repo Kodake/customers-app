@@ -12,7 +12,7 @@ interface Props {
 
 const DetallesCliente: React.FC<Props> = ({ navigation, route }) => {
   console.log(route.params);
-  const { guardarConsultarAPI } = route.params;
+
   const { nombre, telefono, correo, empresa, id } = route.params.item;
 
   const mostrarConfirmacion = () => {
@@ -38,7 +38,6 @@ const DetallesCliente: React.FC<Props> = ({ navigation, route }) => {
     navigation.navigate('Inicio');
 
     // Volver a consultar la API
-    guardarConsultarAPI(true);
   };
 
   return (
@@ -65,12 +64,7 @@ const DetallesCliente: React.FC<Props> = ({ navigation, route }) => {
       <FAB
         icon="pencil"
         style={globalStyles.fab}
-        onPress={() =>
-          navigation.navigate('NuevoCliente', {
-            cliente: route.params.item,
-            guardarConsultarAPI,
-          })
-        }
+        onPress={() => { }}
       />
     </View>
   );

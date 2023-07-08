@@ -5,6 +5,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import Inicio from './views/Inicio';
 import NuevoCliente from './views/NuevoCliente';
 import DetallesCliente from './views/DetallesCliente';
+import EditarCliente from './views/EditarCliente';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ const App: React.FC = () => {
               component={Inicio}
             />
             <Stack.Screen name="NuevoCliente" component={NuevoCliente} options={{ title: 'Nuevo Cliente' }} />
+            <Stack.Screen name="EditarCliente" component={EditarCliente} options={{ title: 'Editar Cliente' }} />
             <Stack.Screen name="DetallesCliente" component={DetallesCliente} options={{ title: 'Detalles Cliente' }} />
           </Stack.Navigator>
         </NavigationContainer>
