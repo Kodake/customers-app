@@ -5,14 +5,8 @@ import globalStyles from '../styles/global';
 import { styles } from './InicioStyles';
 import { observer } from 'mobx-react';
 import store from '../store/sharedStateStore';
-import { Props } from '../interfaces/appInterfaces';
+import { Cliente, Props } from '../interfaces/appInterfaces';
 import { CLIENT_STRINGS } from '../messages/appMessages';
-
-interface Cliente {
-  id: number;
-  nombre: string;
-  empresa: string;
-}
 
 const Inicio: React.FC<Props> = observer(({ navigation }) => {
 
