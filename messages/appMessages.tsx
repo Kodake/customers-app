@@ -19,20 +19,19 @@ export const CLIENT_STRINGS = {
 };
 
 export const VALIDATION_STRINGS = {
-    validationError: 'Validation error',
-    nombreRequired: 'Nombre is required',
-    nombreMinLength: 'Nombre must have at least 2 characters',
-    nombreMaxLength: 'Nombre can have at most 50 characters',
-    telefonoInvalid: 'Invalid telefono',
-    telefonoRequired: 'Telefono is required',
-    telefonoLength: 'Telefono must be exactly 10 characters',
-    correoInvalid: 'Invalid email',
-    correoRequired: 'Correo is required',
-    empresaRequired: 'Empresa is required',
-    empresaMinLength: 'Empresa must have at least 2 characters',
-    empresaMaxLength: 'Empresa can have at most 50 characters',
+    validationError: 'Error de validación',
+    nombreRequired: 'El nombre es obligatorio',
+    nombreMinLength: 'El nombre debe tener al menos 2 caracteres',
+    nombreMaxLength: 'El nombre puede tener como máximo 50 caracteres',
+    telefonoInvalid: 'Teléfono inválido',
+    telefonoRequired: 'El teléfono es obligatorio',
+    telefonoLength: 'El teléfono debe tener exactamente 10 caracteres',
+    correoInvalid: 'Correo electrónico inválido',
+    correoRequired: 'El correo es obligatorio',
+    empresaRequired: 'La empresa es obligatoria',
+    empresaMinLength: 'La empresa debe tener al menos 2 caracteres',
+    empresaMaxLength: 'La empresa puede tener como máximo 50 caracteres',
 };
-
 
 export const CONFIRMATION_MESSAGES = {
     deleteConfirmation: '¿Deseas eliminar este cliente?',
@@ -40,7 +39,3 @@ export const CONFIRMATION_MESSAGES = {
     deleteConfirmationYes: 'Si, eliminar',
     deleteConfirmationCancel: 'Cancelar',
 };
-
-export const ERROR_MESSAGES = {
-    requiredFields: 'Todos los campos son obligatorios',
-}
