@@ -15,10 +15,7 @@ export const CLIENT_STRINGS = {
     emailPlaceholder: 'correo@correo.com',
     companyLabel: 'Empresa',
     companyPlaceholder: 'Escribe la empresa donde trabajas',
-    saveButton: 'Guardar cliente',
-    errorDialogTitle: 'Error',
-    errorDialogMessage: 'Todos los campos son obligatorios',
-    errorDialogButton: 'OK',
+    saveButton: 'Guardar cliente'
 };
 
 export const VALIDATION_STRINGS = {
