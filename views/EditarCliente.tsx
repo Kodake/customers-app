@@ -76,18 +76,6 @@ const EditarCliente: React.FC<Props> = observer(({ navigation }) => {
       >
         {CLIENT_STRINGS.updateClient}
       </Button>
-
-      <Portal>
-        <Dialog visible={store.alerta} onDismiss={() => store.setAlerta(false)}>
-          <Dialog.Title>{CLIENT_STRINGS.errorDialogTitle}</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{ERROR_MESSAGES.requiredFields}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => store.setAlerta(false)}>{CLIENT_STRINGS.errorDialogButton}</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
     </View>
   );
 });

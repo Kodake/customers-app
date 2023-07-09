@@ -1,6 +1,9 @@
 import axios from "axios";
 import { makeAutoObservable, runInAction } from "mobx";
 import { Cliente, NewCliente } from "../interfaces/appInterfaces";
+import * as yup from 'yup';
+import { Alert } from "react-native";
+import { VALIDATION_STRINGS } from "../messages/appMessages";
 
 class SharedStateStore {
     nombre = '';
@@ -65,6 +68,46 @@ class SharedStateStore {
         this.consultarAPI = consultarAPI;
     }
 
+    validationSchema = yup.object().shape({
+        nombre: yup.string()
+          .required(VALIDATION_STRINGS.nombreRequired)
+          .min(2, VALIDATION_STRINGS.nombreMinLength)
+          .max(50, VALIDATION_STRINGS.nombreMaxLength),
+        telefono: yup.string()
+          .required(VALIDATION_STRINGS.telefonoRequired)
+          .matches(/^[0-9]+$/, VALIDATION_STRINGS.telefonoInvalid)
+          .length(10, VALIDATION_STRINGS.telefonoLength),
+        correo: yup.string()
+          .email(VALIDATION_STRINGS.correoInvalid)
+          .required(VALIDATION_STRINGS.correoRequired),
+        empresa: yup.string()
+          .required(VALIDATION_STRINGS.empresaRequired)
+          .min(2, VALIDATION_STRINGS.empresaMinLength)
+          .max(100, VALIDATION_STRINGS.empresaMaxLength),
+      });
+
+    validateCliente() {
+        const cliente = {
+            nombre: this.nombre,
+            telefono: this.telefono,
+            correo: this.correo,
+            empresa: this.empresa,
+        };
+
+        try {
+            this.validationSchema.validateSync(cliente, { abortEarly: false });
+            this.setAlerta(false);
+            return true;
+        } catch (error) {
+            runInAction(() => {
+                const validationError = error as yup.ValidationError;
+                const errorMessage = validationError.inner.map((e) => e.message).join('\n');
+                Alert.alert(VALIDATION_STRINGS.validationError, errorMessage);
+            });
+            return false;
+        }
+    }
+
     async fetchClientes(): Promise<void> {
         const url = `https://6498b9139543ce0f49e246fa.mockapi.io/api/v2/clientes`;
 
@@ -93,8 +136,7 @@ class SharedStateStore {
     }
 
     async saveCliente(): Promise<void> {
-        if (this.nombre === '' || this.telefono === '' || this.correo === '' || this.empresa === '') {
-            this.setAlerta(true);
+        if (!this.validateCliente()) {
             this.setIsSaved(false);
             return;
         }
@@ -115,8 +157,7 @@ class SharedStateStore {
     }
 
     async updateCliente(id?: string): Promise<void> {
-        if (this.nombre === '' || this.telefono === '' || this.correo === '' || this.empresa === '') {
-            this.setAlerta(true);
+        if (!this.validateCliente()) {
             this.setIsSaved(false);
             return;
         }
