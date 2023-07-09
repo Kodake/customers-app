@@ -56,6 +56,7 @@ const DetallesCliente: React.FC<Props> = ({ navigation }) => {
       </Button>
 
       <FAB
+        color='white'
         icon="pencil"
         style={globalStyles.fab}
         onPress={() => handleFetchCliente(store.clienteById?.id.toString())}

@@ -54,6 +54,7 @@ const Inicio: React.FC<Props> = observer(({ navigation }) => {
       />
 
       <FAB
+        color='white'
         icon="plus"
         style={styles.fab}
         onPress={handleNavigateNewCliente}

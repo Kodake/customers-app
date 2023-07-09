@@ -18,7 +18,7 @@ export const CLIENT_STRINGS = {
     saveButton: 'Guardar cliente',
     errorDialogTitle: 'Error',
     errorDialogMessage: 'Todos los campos son obligatorios',
-    errorDialogButton: 'Ok',
+    errorDialogButton: 'OK',
 };
 
 export const CONFIRMATION_MESSAGES = {

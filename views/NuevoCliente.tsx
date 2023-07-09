@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import {
   TextInput,
@@ -16,6 +16,13 @@ import { Props } from '../interfaces/appInterfaces';
 import { CLIENT_STRINGS, ERROR_MESSAGES } from '../messages/appMessages';
 
 const NuevoCliente: React.FC<Props> = observer(({ navigation }) => {
+
+  useEffect(() => {
+    if (store.cliente || store.clienteById) {
+      store.clearCliente();
+    }
+  }, [])
+
 
   const handleSaveCliente = async () => {
     await store.saveCliente();
